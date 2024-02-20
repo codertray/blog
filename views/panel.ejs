@@ -1,0 +1,21 @@
+<% var currentPage = "panel" %>
+<%- include("partials/header", {currentPage: currentPage}) %>
+<div>
+    <h1>Admin Panel</h1>
+    <a href="/blog/admin/write">New</a>
+</div>
+<div>
+    <% data.forEach(item => { %>
+        <div>
+            <h3><%= item.title %></h3>
+            <p><%= item.date %></p>
+            <a href="/blog/admin/<%= item.route %>.edit">edit</a>
+            <form action="/blog/admin/delete" method="post">
+                <input type="hidden" name="id" value="<%= item.id %>" />
+                <input type="submit" value="Delete">
+            </form>
+        </div>    
+    <% }); %>
+</div>
+<%- include("partials/footer") %>
+

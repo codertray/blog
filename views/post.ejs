@@ -1,0 +1,17 @@
+<% var currentPage = data.title %>
+<%- include("partials/header", {currentPage: currentPage}); %>
+<%- include("partials/navbar"); %>
+
+<div>
+    <h2><%= data.title %></h2>
+    <p><%= data.date %></p>
+</div>
+<% if (data.image !==null) { %>
+    <img src="<%= data.image %>" />
+<% } else { %>
+    <hr />
+<% } %>
+<div>
+    <p><%= data.content %></p>
+</div>
+<%- include("partials/footer"); %>

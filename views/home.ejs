@@ -1,0 +1,17 @@
+<% var currentPage = "Home" %>
+<%- include("partials/header", {currentPage: currentPage}); %>
+<%- include("partials/navbar"); %>
+
+<div>
+    <% data.forEach(item => { %>
+        <% if (item.image !== null) { %>
+            <img src="<%= item.image %>" />
+        <% } else { %>
+            <img src="assets/test.png" />
+        <% } %>
+        <a href="/blog/<%= item.route %>"><h3><%= item.title %></h3></a>
+        <p><%= item.date %></p>
+        <p><%= item.blerb %></p>
+    <% }); %>
+</div>
+<%- include("partials/footer") %>
