@@ -1,0 +1,54 @@
+<% var currentPage = "Post Form"; %>
+<%- include("partials/header", {currentPage: currentPage});  %>
+
+<div>
+    <% if (locals.data) { %>
+        <form action="/blog/admin/update" method="post" enctype="multipart/form-data">
+            <label>
+                Title?
+                <input type="text" name="title" value="<%= data.title %>" />
+            </label>
+            <label>
+                Route?
+                <input type="text" name="route" value="<%= data.route %>" />
+            </label>
+            <% if (!data.image) { %>
+                <label>
+                    Photo?
+                    <input type="image" accept="image/x-ping, image/jpg, image/jpeg" />
+                </label>    
+            <% } %>
+            <div id="editor">
+                <%= data.content %>
+            </div>
+            <label>
+                Blerb(short description of the article)
+                <textarea name="blerb"><%= data.blerb %></textarea>
+            </label>
+            <input id="submit" type="submit" value="Post" />
+        </form>
+    <% } else { %>
+        <form action="/blog/admin/post" method="post" enctype="multipart/form-data">
+            <label>
+                Title?
+                <input type="text" name="title" />
+            </label>
+            <label>
+                Route?
+                <input type="text" name="route" />
+            </label>
+            <label>
+                Photo?
+                <input type="image" accept="image/x-ping, image/jpg, image/jpeg" />
+            </label>
+            <div id="editor"></div>
+            <label>
+                Blerb(short description of the article)
+                <textarea name="blerb"></textarea>
+            </label>
+            <input id="submit" type="submit" value="Post" />
+        </form>
+    <% } %>
+</div>
+<script src="formscript.js" type="text/javascript"></script>
+<%- include("partials/footer.ejs") %>
