@@ -90,10 +90,10 @@ const data = {
         }
     },
 
-    async addPost(title, route, date, image, content, blerb) {
+    async addPost(title, route, date, image, content, blerb, topic) {
         try {
             await pool.query("INSERT INTO posts (title, route, date, image, content, blerb) VALUES ($1, $2, $3, $4, $5, $6);",
-            [title, route, date, image, content, blerb]);
+            [title, route, date, image, content, blerb, topic]);
             return {
                 success: true,
                 data: "query returned successfully",
@@ -106,10 +106,10 @@ const data = {
         }
     },
 
-    async updatePost(id, title, route, image, content, blerb) {
+    async updatePost(id, title, route, image, content, blerb, topic) {
         try {
-            await pool.query("UPDATE posts SET title = $2, route = $3, image = $4, content = $5, blerb = $6 WHERE id = $1",
-            [id, title, route, image, content, blerb]);
+            await pool.query("UPDATE posts SET title = $2, route = $3, image = $4, content = $5, blerb = $6, topic= $7 WHERE id = $1",
+            [id, title, route, image, content, blerb, topic]);
             return {
                 success: true,
                 data: "query returned successfully",
@@ -124,10 +124,11 @@ const data = {
 
     async deletePost(id) {
         try {
+            imagePath = await pool.query("SELECT image FROM posts WHERE id = $1;", [id])
             await pool.query("DELETE FROM posts WHERE id = $1", [id]);
             return {
                 success: true,
-                data: "query returned successfully",
+                data:  {message: "query returned succesfully", path: imagePath},
             };
         } catch (e) {
             return {

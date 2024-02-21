@@ -6,10 +6,11 @@ import env from "dotenv"
 import session from "express-session";
 import passport from "passport";
 import local from "passport-local"
+import multer from "multer"
 
 
 const app = express();
-let postRoutes = {};
+const upload = multer({dest: "../public/assets"})
 const port = 3000;
 
 env.config({
@@ -106,6 +107,10 @@ app.post("/blog/admin/delete", async (req, res) => {
             console.error("Error deleting post:", result.data);
             res.redirect("/blog/500");
         } else {
+            fs.unlink(result.data.path, (err) => {
+                err ? console.error("error deleting file")
+                : console.log("success")
+            })
             res.redirect("/blog/admin/panel");
         }
     } catch (err) {
@@ -114,43 +119,32 @@ app.post("/blog/admin/delete", async (req, res) => {
     }
 });
 
-app.post("/blog/admin/post", async (req, res) => {
+app.post("/blog/admin/post", upload.single("image"), async (req, res) => {
     const { title, image, content, blerb, route } = req.body;
     const date = new Date().toISOString(); // Use ISO string for date
-    const imagePath = `../public/assets/${image.filename}`;
-    fs.writeFile(magePath, image.data, async (err) => {
-        if (err) {
-            console.error("Error writing image:", err);
+    const imagePath = req.file.path;
+    const result = await data.addPost(title, route, date, imagePath, content, blerb);
+        if (!result.success) {
+            console.error("Error adding post:", result.data);
             res.redirect("back");
         } else {
-            const result = await data.addPost(title, route, date, imagePath, content, blerb);
-            if (!result.success) {
-                console.error("Error adding post:", result.data);
-                res.redirect("back");
-            } else {
-                res.redirect("/blog/admin/panel");
+            res.redirect("/blog/admin/panel");
             }
-        }
-    });
 });
 
-app.post("/blog/admin/update", async (req, res) => {
-    const { title, image, content, blerb } = req.body;
-    const imagePath = `../public/assets/${image.filename}`;
-    fs.writeFile(imagePath, image.data, async (err) => {
-        if (err) {
-            console.error("Error writing image:", err);
-            res.redirect("back");
-        } else {
-            const result = await data.updatePost(title, date, imagePath, content, blerb);
-            if (!result.success) {
-                console.error("Error adding post:", result.data);
-                res.redirect("back");
-            } else {
-                res.redirect("/blog/admin/panel");
-            }
-        }
-    });
+app.post("/blog/admin/update", upload.single("image"), async (req, res) => {
+    const { id, title, route, oldPath, content, blerb } = req.body;
+    const imagePath = req.file.path;
+    if(oldPath || oldPath !== imagePath) {
+        fs.unlink(oldPath, (err) => {
+            err ? () =>{
+                console.log("error removing file", err);
+            } : console.log("success")
+        });
+    }
+    const result = data.updatePost(id, title, route, imagePath, content, blerb, topic)
+    !result.success ? res.redirect("back")
+    : res.redirect("/blog/admin/panel")
 });
 
 app.get("/blog/:topic-posts", async (req, res) => {
