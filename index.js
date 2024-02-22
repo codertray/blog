@@ -1,8 +1,8 @@
-import express, { Router }  from "express"
-import fs from "fs"
-import data from "./DB.js"
-import bcrypt from "bcryptjs"
-import env from "dotenv"
+import express, { Router }  from "express";
+import fs from "fs";
+import data from "./DB.js";
+import bcrypt from "bcryptjs";
+import env from "dotenv";
 import session from "express-session";
 import passport from "passport";
 import local from "passport-local"
@@ -10,14 +10,12 @@ import multer from "multer"
 
 
 const app = express();
-const upload = multer({dest: "../public/assets"})
+const upload = multer({dest: "../public/assets"});
 const port = 3000;
+const config = env.config()
 
-env.config({
-    path: "../.env"
-})
-
-app.use(express.static("../public"));
+app.set("view engine", "ejs");
+app.use(express.static('public'));
 app.use(express.urlencoded({extended: true}));
 app.use(
     session({
@@ -52,7 +50,7 @@ app.get("/blog/404", (req, res) => {
 });
 
 app.get("/blog/500", (req, res) => {
-    res.render("../views/500");
+    res.render("../views/500.ejs");
 });
 
 app.get("/blog/admin", (req, res ) => {

@@ -12,12 +12,15 @@
                 Route?
                 <input type="text" name="route" value="<%= data.route %>" />
             </label>
-            <% if (!data.image) { %>
-                <label>
-                    Photo?
-                    <input type="image" accept="image/x-ping, image/jpg, image/jpeg" />
-                </label>    
-            <% } %>
+            <label>
+                Topic
+                <input type="text" name="topic" />
+            </label>
+            <label>
+                Photo?
+                <input type="hidden" name="oldPath" value="<%= data.image %>"
+                <input type="file" accept="image/x-ping, image/jpg, image/jpeg" />
+            </label>
             <div id="editor">
                 <%= data.content %>
             </div>
@@ -50,5 +53,6 @@
         </form>
     <% } %>
 </div>
-<script src="formscript.js" type="text/javascript"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
+<script src="/formScript.js" type="module"></script>
 <%- include("partials/footer.ejs") %>
