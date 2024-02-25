@@ -10,7 +10,16 @@ import multer from "multer"
 
 
 const app = express();
-const upload = multer({dest: "../public/assets"});
+const upload = multer({
+    storage: multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, "./public/assets");
+        },
+        filename: (req, file, cb) => {
+            cb(null, file.originalname);
+        }
+    })
+});
 const port = 3000;
 const config = env.config()
 
@@ -87,14 +96,14 @@ app.get("/blog/admin/write", (req, res) => {
 });
 
 app.get("/blog/admin/:post.edit", async (req, res) => {
-    post = req.params.post;
+    const post = req.params.post;
     const postRoutes = res.locals.postRoutes
-    foundPost = postRoutes.find((postRoute) => (postRoute === post));
+    let foundPost = postRoutes.find((postRoute) => (postRoute.route === post));
     const result = await data.displayPost(foundPost.id);
     !result.success ? () => {
         res.redirect("/blog/404");
         console.log(result.data);
-    } : res.render("../views/form.ejs", {data: result.data});
+    } : res.render("../views/form.ejs", {id: foundPost.id, data: result.data});
 });
 
 app.post("/blog/admin/delete", async (req, res) => {
@@ -119,8 +128,14 @@ app.post("/blog/admin/delete", async (req, res) => {
 
 app.post("/blog/admin/post", upload.single("image"), async (req, res) => {
     const { title, image, content, blerb, route } = req.body;
-    const date = new Date().toISOString(); // Use ISO string for date
-    const imagePath = req.file.path;
+    const date = new Date().toLocaleDateString("en-us", {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric'
+    });
+    // TODO: adjust date to return only the date
+    console.log(req.file)
+    const imagePath = req.file ? req.file.path : null
     const result = await data.addPost(title, route, date, imagePath, content, blerb);
         if (!result.success) {
             console.error("Error adding post:", result.data);
@@ -131,9 +146,9 @@ app.post("/blog/admin/post", upload.single("image"), async (req, res) => {
 });
 
 app.post("/blog/admin/update", upload.single("image"), async (req, res) => {
-    const { id, title, route, oldPath, content, blerb } = req.body;
-    const imagePath = req.file.path;
-    if(oldPath || oldPath !== imagePath) {
+    const { id, title, route, oldPath, content, blerb, topic } = req.body;
+    const imagePath = req.file ? req.file.path : oldPath;
+    if(oldPath !== null && oldPath !== imagePath) {
         fs.unlink(oldPath, (err) => {
             err ? () =>{
                 console.log("error removing file", err);

@@ -4,6 +4,7 @@
 <div>
     <% if (locals.data) { %>
         <form action="/blog/admin/update" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="<%= id %>"
             <label>
                 Title?
                 <input type="text" name="title" value="<%= data.title %>" />
@@ -18,12 +19,10 @@
             </label>
             <label>
                 Photo?
-                <input type="hidden" name="oldPath" value="<%= data.image %>"
-                <input type="file" accept="image/x-ping, image/jpg, image/jpeg" />
+                <input type="hidden" name="oldPath" value="<%= data.image %>" />
+                <input type="file" name="image" accept="image/x-ping, image/jpg, image/jpeg" />
             </label>
-            <div id="editor">
-                <%= data.content %>
-            </div>
+            <textarea id="editor" name="content" rows="10"><%= data.content %></textarea>
             <label>
                 Blerb(short description of the article)
                 <textarea name="blerb"><%= data.blerb %></textarea>
@@ -42,12 +41,16 @@
             </label>
             <label>
                 Photo?
-                <input type="image" accept="image/x-ping, image/jpg, image/jpeg" />
+                <input type="file" name="image" accept="image/x-ping, image/jpg, image/jpeg" />
             </label>
-            <div id="editor"></div>
+            <textarea name="content" id="editor" rows="10"></textarea>
             <label>
                 Blerb(short description of the article)
                 <textarea name="blerb"></textarea>
+            </label>
+            <label>
+                Topic
+                <input type="text" name="topic" />
             </label>
             <input id="submit" type="submit" value="Post" />
         </form>
