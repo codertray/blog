@@ -12,6 +12,7 @@
             <a href="/blog/admin/<%= item.route %>.edit">edit</a>
             <form action="/blog/admin/delete" method="post">
                 <input type="hidden" name="id" value="<%= item.id %>" />
+                <input type="hidden" name="path" value="<%= item.image %>">
                 <input type="submit" value="Delete">
             </form>
         </div>    

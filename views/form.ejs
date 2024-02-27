@@ -19,8 +19,11 @@
             </label>
             <label>
                 Photo?
-                <input type="hidden" name="oldPath" value="<%= data.image %>" />
-                <input type="file" name="image" accept="image/x-ping, image/jpg, image/jpeg" />
+                <% if (data.image !== null) { %>
+                    <input type="hidden" name="oldPath" value="<%= data.image %>" />
+                    <img src="<%= data.image %>" />
+                <% } %>
+                <input type="file" name="image" accept="image/x-ping, image/jpg, image/jpeg"/>
             </label>
             <textarea id="editor" name="content" rows="10"><%= data.content %></textarea>
             <label>

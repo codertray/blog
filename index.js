@@ -36,17 +36,17 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session())
 app.use(async (req, res, next) => {
-    const result = await data.fetch(list, {type: "route"})
+    const result = await data.fetch("list", {type: "routes"})
     !result.success && res.redirect("/blog/500");
     res.locals.postRoutes = result.data;
     next();
 });
 
+
 app.get("/blog", async (req, res) => {
-    const result = await data.fetch(list);
+    const result = await data.fetch("list");
     !result.success ? () => {
         res.redirect("/blog/500");
-        console.log(result.data);
     } : res.render("../views/home.ejs", {data: result.data})
 });
 
@@ -78,7 +78,7 @@ app.get("/blog/admin/panel", (req, res, next) => {
 });
 async function checkPosts(req, res, next) {
     try {
-        const result = await data.fetch(list, {type: "admin"});
+        const result = await data.fetch("list", {type: "admin"});
         if (!result.success) {
             console.log("Error:", result.data);
             res.redirect("/blog/500");
@@ -99,25 +99,28 @@ app.get("/blog/admin/:post.edit", async (req, res) => {
     const post = req.params.post;
     const postRoutes = res.locals.postRoutes
     let foundPost = postRoutes.find((postRoute) => (postRoute.route === post));
-    const result = await data.fetch(display, {full: true, id: foundPost.id});
+    const result = await data.fetch("display", {full: true, id: foundPost.id});
     !result.success ? () => {
         res.redirect("/blog/404");
         console.log(result.data);
-    } : res.render("../views/form.ejs", {id: foundPost.id, data: result.data});
+    } : res.render("../views/form.ejs", {id: foundPost.id, data: result.data[0] });
 });
 
 app.post("/blog/admin/delete", async (req, res) => {
     const postid = req.body.id;
+    const path = req.body.path
     try {
-        const result = await data.managePosts(drop, postid);
+        const result = await data.managePosts("drop", postid);
         if (!result.success) {
             console.error("Error deleting post:", result.data);
             res.redirect("/blog/500");
         } else {
-            fs.unlink(result.data.path, (err) => {
-                err ? console.error("error deleting file")
-                : console.log("success")
-            })
+            if (path !== null) {
+                fs.unlink(path, (err) => {
+                    err ? console.error("error deleting file")
+                    : console.log("success")
+                })
+            }
             res.redirect("/blog/admin/panel");
         }
     } catch (err) {
@@ -127,16 +130,10 @@ app.post("/blog/admin/delete", async (req, res) => {
 });
 
 app.post("/blog/admin/post", upload.single("image"), async (req, res) => {
-    const { title, image, content, blerb, route } = req.body;
-    const date = new Date().toLocaleDateString("en-us", {
-        month: '2-digit',
-        day: '2-digit',
-        year: 'numeric'
-    });
-    // TODO: adjust date to return only the date
-    console.log(req.file)
+    const { title, route, content, blerb, topic } = req.body;
+    const date = new Date().toLocaleDateString("en-us");
     const imagePath = req.file ? req.file.path : null
-    const result = await data.managePosts(create, [title, route, date, image, content, blerb, topic]);
+    const result = await data.managePosts("create", [title, route, date, imagePath, content, blerb, topic]);
         if (!result.success) {
             console.error("Error adding post:", result.data);
             res.redirect("back");
@@ -147,22 +144,22 @@ app.post("/blog/admin/post", upload.single("image"), async (req, res) => {
 
 app.post("/blog/admin/update", upload.single("image"), async (req, res) => {
     const { id, title, route, oldPath, content, blerb, topic } = req.body;
-    const imagePath = req.file ? req.file.path : oldPath;
-    if(oldPath !== null && oldPath !== imagePath) {
+    const imagePath = req.file ? req.file.path : oldPath || null;
+    if(oldPath && oldPath !== imagePath) {
         fs.unlink(oldPath, (err) => {
             err ? () =>{
                 console.log("error removing file", err);
             } : console.log("success")
         });
     }
-    const result = data.managePosts(put, [id, title, route, imagePath, content, blerb, topic])
+    const result = await data.managePosts("put", [id, title, route, imagePath, content, blerb, topic])
     !result.success ? res.redirect("back")
     : res.redirect("/blog/admin/panel")
 });
 
 app.get("/blog/:topic-posts", async (req, res) => {
     const topic = req.params.topic;
-    const result = await data.fetch(list, topic);
+    const result = await data.fetch("list", topic);
     !result.success ? () => {
         res.redirect("/blog/500");
         console.log(result.data)
@@ -174,12 +171,13 @@ app.get("/blog/:post", async (req, res) => {
     const postRoutes = res.locals.postRoutes;
     const foundPost = postRoutes.find(postRoute => postRoute.route === post);  
     if (foundPost) {
-        const result = await data.fetch(display, foundPost.id);
+        const result = await data.fetch("display", foundPost.id);
         if (!result.success) {
             console.error("Error displaying post:", result.data);
             res.redirect("/blog/500");
         } else {
-            res.render("../views/post.ejs", { data: result.data });
+            console.log(result)
+            res.render("../views/post.ejs", { data: result.data[0] });
         }
     } else {
         res.redirect("/blog/404");
@@ -207,8 +205,6 @@ passport.use(new local.Strategy(async function verify(id, password, done) {
         return done(err);
     }
 }));
-
-
   
 
 passport.serializeUser(function(admin, cb) {
