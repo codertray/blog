@@ -1,6 +1,5 @@
 <% var currentPage = data.title %>
-<%- include("partials/header", {currentPage: currentPage}); %>
-<%- include("partials/navbar"); %>
+<%- include("partials/frontend/header", {currentPage: currentPage, minimal: true}); %>
 
 <div>
     <h2><%= data.title %></h2>
@@ -14,4 +13,4 @@
 <div>
     <%- data.content %>
 </div>
-<%- include("partials/footer"); %>
+<%- include("partials/frontend/footer"); %>

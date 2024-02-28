@@ -1,8 +1,11 @@
 <% var currentPage = "ADMIN Only | login" %>
-<%- include("partials/header", {currentPage: currentPage}) %>
-<div>
+<%- include("partials/admin/header", {currentPage: currentPage}) %>
+<div class="container">
     <div>
-        <form method="post" action="/blog/login">
+        <% if (err !== false) { %>
+            <p class="error"><%= err %></p>
+        <% } %>
+        <form id="login" method="post" action="/blog/login">
             <label>
                 ID
                 <input type="text" autocomplete="off" autocapitalize="off" autofocus name="username"
@@ -15,4 +18,4 @@
         </form>
     </div>
 </div>
-<%- include("partials/footer") %>
+<%- include("partials/admin/footer") %>

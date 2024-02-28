@@ -1,13 +1,13 @@
 <% var currentPage = "About" %>
-<%- include("partials/header"); %>
-<%- include("partials/navbar"); %>
-<h2>About Creatortray</h2>
-<div>
-    <p>I'm a visually impaired creator from Great Falls, Montana, with a passion for exploring various creative outlets.</p>
-    <p>Delving into diverse areas such as vector graphics and digital art, I find joy in expressing myself through visual mediums.</p>
-    <p>My interests span programming, particularly web development, and photography, where landscape photography holds a special place in my heart.</p>
-    <p>An eternal optimist and a child at heart, I approach life with enthusiasm and a sense of wonder.</p>
-    <p>When not immersed in creative pursuits, you'll find me indulging in gaming adventures or escaping into the realms of fantasy through audiobooks.</p>
+<%- include("partials/frontend/header", {currentPage: currentPage, minimal: false}); %>
+<div class="container">
+    <h2>About Creatortray</h2>
+    <div>
+        <p>I'm a visually impaired creator from Great Falls, Montana, with a passion for exploring various creative outlets.</p>
+        <p>Delving into diverse areas such as vector graphics and digital art, I find joy in expressing myself through visual mediums.</p>
+        <p>My interests span programming, particularly web development, and photography, where landscape photography holds a special place in my heart.</p>
+        <p>An eternal optimist and a child at heart, I approach life with enthusiasm and a sense of wonder.</p>
+        <p>When not immersed in creative pursuits, you'll find me indulging in gaming adventures or escaping into the realms of fantasy through audiobooks.</p>
+    </div>
 </div>
-<a href="http://creatortray.com">My Links</a>
-<%- include("partials/footer"); %>
+<%- include("partials/frontend/footer"); %>

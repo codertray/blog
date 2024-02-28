@@ -22,6 +22,7 @@ const upload = multer({
 });
 const port = 3000;
 const config = env.config()
+var errMessage = false /* used in form handling */
 
 app.set("view engine", "ejs");
 app.use(express.static('public'));
@@ -42,29 +43,28 @@ app.use(async (req, res, next) => {
     next();
 });
 
-
 app.get("/blog", async (req, res) => {
     const result = await data.fetch("list");
     !result.success ? () => {
         res.redirect("/blog/500");
-    } : res.render("../views/home.ejs", {data: result.data})
+    } : res.render("home.ejs", {data: result.data})
 });
 
 app.get("/blog/about", (req, res) => {
-    res.render("../views/about.ejs");
+    res.render("about.ejs");
 });
 
 app.get("/blog/404", (req, res) => {
-    res.render("../views/404.ejs");
+    res.sendFile("404.ejs");
 });
 
 app.get("/blog/500", (req, res) => {
-    res.render("../views/500.ejs");
+    res.sendFile("500.ejs");
 });
 
 app.get("/blog/admin", (req, res ) => {
     req.isAuthenticated() && res.redirect("/blog/admin/panel")
-    res.render("../views/login.ejs");
+    res.render("login.ejs", {err: errMessage});
 });
 
 app.post("/blog/login", passport.authenticate("local", {
@@ -83,7 +83,7 @@ async function checkPosts(req, res, next) {
             console.log("Error:", result.data);
             res.redirect("/blog/500");
         } else {
-            res.render("../views/panel.ejs", { data: result.data });
+            res.render("panel.ejs", { data: result.data });
         }
     } catch (err) {
         console.error("Error:", err);
@@ -92,7 +92,7 @@ async function checkPosts(req, res, next) {
 }
 
 app.get("/blog/admin/write", (req, res) => {
-    res.render("../views/form.ejs");
+    res.render("form.ejs", {err: errMessage});
 });
 
 app.get("/blog/admin/:post.edit", async (req, res) => {
@@ -103,7 +103,7 @@ app.get("/blog/admin/:post.edit", async (req, res) => {
     !result.success ? () => {
         res.redirect("/blog/404");
         console.log(result.data);
-    } : res.render("../views/form.ejs", {id: foundPost.id, data: result.data[0] });
+    } : res.render("form.ejs", {id: foundPost.id, data: result.data[0], err: errMessage });
 });
 
 app.post("/blog/admin/delete", async (req, res) => {
@@ -135,11 +135,12 @@ app.post("/blog/admin/post", upload.single("image"), async (req, res) => {
     const imagePath = req.file ? req.file.path : null
     const result = await data.managePosts("create", [title, route, date, imagePath, content, blerb, topic]);
         if (!result.success) {
-            console.error("Error adding post:", result.data);
+            errMessage = result.data;
             res.redirect("back");
         } else {
+            errMessage = false;
             res.redirect("/blog/admin/panel");
-            }
+        }
 });
 
 app.post("/blog/admin/update", upload.single("image"), async (req, res) => {
@@ -153,8 +154,14 @@ app.post("/blog/admin/update", upload.single("image"), async (req, res) => {
         });
     }
     const result = await data.managePosts("put", [id, title, route, imagePath, content, blerb, topic])
-    !result.success ? res.redirect("back")
-    : res.redirect("/blog/admin/panel")
+    !result.success ? () => {
+        errMessage = result.data;
+        res.redirect("back");
+    }
+    : () => {
+        errMessage = false;
+        res.redirect("/blog/admin/panel");
+    }
 });
 
 app.get("/blog/:topic-posts", async (req, res) => {
@@ -163,7 +170,7 @@ app.get("/blog/:topic-posts", async (req, res) => {
     !result.success ? () => {
         res.redirect("/blog/500");
         console.log(result.data)
-    } : res.render("../views/filter.ejs", {topic: topic, data: result.data});
+    } : res.render("filter.ejs", {topic: topic, data: result.data});
 });
 
 app.get("/blog/:post", async (req, res) => {
@@ -176,8 +183,7 @@ app.get("/blog/:post", async (req, res) => {
             console.error("Error displaying post:", result.data);
             res.redirect("/blog/500");
         } else {
-            console.log(result)
-            res.render("../views/post.ejs", { data: result.data[0] });
+            res.render("post.ejs", { data: result.data[0] });
         }
     } else {
         res.redirect("/blog/404");
@@ -188,15 +194,15 @@ passport.use(new local.Strategy(async function verify(id, password, done) {
     try {
         const hash = process.env.PASSWORD;
         if(id !== process.env.ADMIN_ID) {
-            console.log("wrong id")
+            errMessage = "Wrong id"
             return done(null, false);
         } else {
             const result = await bcrypt.compare(password, hash);
             if (result) {
-                console.log("success");
+                errMessage = false;
                 return done(null, { id: process.env.ADMIN_ID, password: password });
             } else {
-                console.log("wrong password");
+                errMessage = "Oops! wrong password";
                 return done(null, false);
             }
         }

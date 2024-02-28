@@ -1,17 +1,20 @@
 <% var currentPage = "Home" %>
-<%- include("partials/header", {currentPage: currentPage}); %>
-<%- include("partials/navbar"); %>
+<%- include("partials/frontend/header", {currentPage: currentPage, minimal: false}); %>
 
 <div>
     <% data.forEach(item => { %>
-        <% if (item.image !== null) { %>
-            <img src="<%= item.image %>" />
-        <% } else { %>
-            <img src="assets/test.png" />
-        <% } %>
-        <a href="/blog/<%= item.route %>"><h3><%= item.title %></h3></a>
-        <p><%= item.date %></p>
-        <p><%= item.blerb %></p>
+        <div class="promo">
+            <div class="title">
+                <a href="/blog/<%= item.route %>"><h3><%= item.title %></h3></a>
+                <p><%= item.date %></p>
+            </div>
+            <% if (item.image !== null) { %>
+                <img src="<%= item.image %>" />
+            <% } else { %>
+                <img src="/assets/test.png" />
+            <% } %>
+            <p><%= item.blerb %></p>
+        </div>
     <% }); %>
 </div>
-<%- include("partials/footer") %>
+<%- include("partials/frontend/footer") %>

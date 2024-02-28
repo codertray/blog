@@ -1,9 +1,12 @@
 <% var currentPage = "Post Form"; %>
-<%- include("partials/header", {currentPage: currentPage});  %>
+<%- include("partials/admin/header", {currentPage: currentPage});  %>
 
-<div>
+<div class="container">
     <% if (locals.data) { %>
-        <form action="/blog/admin/update" method="post" enctype="multipart/form-data">
+        <form id="post" action="/blog/admin/update" method="post" enctype="multipart/form-data">
+            <% if (err !== false) { %>
+                <p class="error"><%= err %></p>
+            <% } %>
             <input type="hidden" name="id" value="<%= id %>"
             <label>
                 Title?
@@ -34,6 +37,9 @@
         </form>
     <% } else { %>
         <form action="/blog/admin/post" method="post" enctype="multipart/form-data">
+            <% if (err !== false) { %>
+                <p class="error"><%= err %></p>
+            <% } %>
             <label>
                 Title?
                 <input type="text" name="title" />
@@ -60,5 +66,5 @@
     <% } %>
 </div>
 <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
-<script src="/formScript.js" type="module"></script>
-<%- include("partials/footer.ejs") %>
+<script src="/admin/formScript.js" type="module"></script>
+<%- include("partials/admin/footer.ejs") %>
