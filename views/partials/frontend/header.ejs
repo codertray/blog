@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="/root-styles.css">
         <link rel="stylesheet" href="/frontend/styles.css" />
     </head>
-    <nav>
+    <nav <% if (minimal) { %>class="minimal" <% } %>>
         <% if (minimal) { %>
             <a href="#" onclick="goBack()"><i class="fa-solid fa-chevron-left"></i></a>
         <% } %>

@@ -1,16 +1,18 @@
 <% var currentPage = data.title %>
 <%- include("partials/frontend/header", {currentPage: currentPage, minimal: true}); %>
 
-<div>
-    <h2><%= data.title %></h2>
-    <p><%= data.date %></p>
-</div>
-<% if (data.image !==null) { %>
-    <img src="<%= data.image %>" />
-<% } else { %>
-    <hr />
-<% } %>
-<div>
-    <%- data.content %>
+<div class="container">
+    <div class="title">
+        <h2><%= data.title %></h2>
+        <p><%= data.date %></p>
+    </div>
+    <% if (data.image !==null) { %>
+        <img src="<%= data.image %>" />
+    <% } else { %>
+        <hr />
+    <% } %>
+    <div>
+        <%- data.content %>
+    </div>
 </div>
 <%- include("partials/frontend/footer"); %>

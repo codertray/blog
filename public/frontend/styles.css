@@ -1,0 +1,49 @@
+body {
+    --base: rgb(138, 138, 138);
+    --head: white;
+    --accent: darkgreen;
+    --gradient: linear-gradient(#1ac5eb, #013e98);
+    --outer: 3rem;
+    --standard: 1.5rem;
+    --inner: 1rem;
+}
+
+nav, footer {
+    background: var(--gradient);
+    padding: 0px;
+    margin-block: 0px;
+}
+
+nav div {
+    margin-block: var(--inner);
+    padding: 0px;
+}
+.minimal {
+    display: flex;
+    gap: var(--inner);
+}
+.minimal a {
+    font-size: 2rem;
+    color: white;
+}
+
+.container, .promo {
+    flex-direction: column;
+}
+
+.container {
+    padding: var(--outer) var(--standard);
+    align-items: center;
+    min-height: 100dvh;
+}
+
+.title {
+    justify-content: space-between;
+}
+
+.content img {
+    width: 300px;
+}
+img {
+    max-width: 1200px;
+}
