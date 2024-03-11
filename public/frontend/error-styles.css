@@ -1,0 +1,18 @@
+body> div {
+    background: linear-gradient(#FFA500, #4B0000);
+    min-height: 100dvh;
+    justify-content: center;
+    align-items: center;
+}
+
+body> div> div {
+    max-width: 480px;
+    background-color: rgb(1, 19, 0);
+    flex-direction: column;
+    padding: .5rem 2rem;
+    align-items: baseline;
+    gap: 1rem;
+}
+a:hover, a:focus {
+    text-decoration: underline;
+}

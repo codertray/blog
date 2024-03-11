@@ -20,10 +20,11 @@ nav div {
 }
 .minimal {
     display: flex;
+    font-size: var(--standard);
     gap: var(--inner);
 }
 .minimal a {
-    font-size: 2rem;
+    font-size: var(--standard);
     color: white;
 }
 
@@ -36,14 +37,48 @@ nav div {
     align-items: center;
     min-height: 100dvh;
 }
+.promo {
+    min-width: 80%;
+    align-items: baseline;
+}
+.container> h2 {
+    font-size: var(--outer);
+}
 
 .title {
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: center;
     justify-content: space-between;
+    margin: var(--inner) var(--standard);
+}
+
+.content {
+    max-width: 800px;
 }
 
 .content img {
     width: 300px;
+    margin: var(--inner);
 }
 img {
     max-width: 1200px;
+}
+
+.title a:hover, .title a:focus {
+    text-decoration: underline;
+}
+
+.title a:visited {
+    color: var(--base);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+}
+
+.active-page {
+    border-bottom: 3px solid var(--head);
+}
+.article {
+    flex-direction: column;
+    max-width: 1000px;
 }

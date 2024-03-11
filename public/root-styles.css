@@ -1,20 +1,25 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
 body {
     --base: rgb(138, 138, 138);
     --head: white;
     --accent: darkgreen;
     --gradient: linear-gradient(#1ac5eb, #013e98);
+    --backdrop: rgb(1, 19, 0);
     --outer: 3rem;
     --standard: 1.5rem;
-    --inner: 1rem;
-    background: rgb(1, 19, 0);
+    --inner: 0.5rem;
+    background: var(--backdrop);
     font-family: 'M PLUS Rounded 1c', sans-serif;
-    font-size: 12pt;
+    font-size: 16pt;
     font-weight: 400;
     color: var(--base)
 }
 h1, h2 {
     color: var(--head);
-    margin: 0px var(--standard)
 }
 h1 {
     font-size: 2rem;

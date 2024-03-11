@@ -55,11 +55,11 @@ app.get("/blog/about", (req, res) => {
 });
 
 app.get("/blog/404", (req, res) => {
-    res.sendFile("404.ejs");
+    res.sendFile("/home/tray/Documents/code/web/projects/blog/views/404.html");
 });
 
 app.get("/blog/500", (req, res) => {
-    res.sendFile("500.ejs");
+    res.sendFile("/home/tray/Documents/code/web/projects/blog/views/500.html");
 });
 
 app.get("/blog/admin", (req, res ) => {
@@ -131,7 +131,11 @@ app.post("/blog/admin/delete", async (req, res) => {
 
 app.post("/blog/admin/post", upload.single("image"), async (req, res) => {
     const { title, route, content, blerb, topic } = req.body;
-    const date = new Date().toLocaleDateString("en-us");
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const date = `${month}/${day}/${year}`;
     const imagePath = req.file ? req.file.path : null
     const result = await data.managePosts("create", [title, route, date, imagePath, content, blerb, topic]);
         if (!result.success) {

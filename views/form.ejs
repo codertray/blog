@@ -1,7 +1,7 @@
 <% var currentPage = "Post Form"; %>
 <%- include("partials/admin/header", {currentPage: currentPage});  %>
 
-<div class="container">
+<div>
     <% if (locals.data) { %>
         <form id="post" action="/blog/admin/update" method="post" enctype="multipart/form-data">
             <% if (err !== false) { %>
@@ -10,58 +10,64 @@
             <input type="hidden" name="id" value="<%= id %>"
             <label>
                 Title?
-                <input type="text" name="title" value="<%= data.title %>" />
+                <input id="title" type="text" name="title" value="<%= data.title %>" />
             </label>
-            <label>
-                Route?
-                <input type="text" name="route" value="<%= data.route %>" />
-            </label>
-            <label>
-                Topic
-                <input type="text" name="topic" />
-            </label>
+            <div>
+                <label>
+                    Route?
+                    <input id="route" type="text" name="route" value="<%= data.route %>" />
+                </label>
+                <label>
+                    Topic
+                    <input id="topic" type="text" name="topic" />
+                </label>
+            </div>
             <label>
                 Photo?
                 <% if (data.image !== null) { %>
                     <input type="hidden" name="oldPath" value="<%= data.image %>" />
-                    <img src="<%= data.image %>" />
+                    <img class="stamp" src="<%= data.image %>" />
                 <% } %>
-                <input type="file" name="image" accept="image/x-ping, image/jpg, image/jpeg"/>
+                <input class="image" type="file" name="image" accept="image/x-ping, image/jpg, image/jpeg"/>
             </label>
-            <textarea id="editor" name="content" rows="10"><%= data.content %></textarea>
+            <textarea id="editor" name="content"><%= data.content %></textarea>
             <label>
                 Blerb(short description of the article)
-                <textarea name="blerb"><%= data.blerb %></textarea>
+                <textarea id="blerb" name="blerb"><%= data.blerb %></textarea>
             </label>
-            <input id="submit" type="submit" value="Post" />
+            <input id="location" type="text" name="location" onchange="handleChange(event, 'post')" hidden />
+            <input class="submit" type="submit" value="Post" />
         </form>
     <% } else { %>
-        <form action="/blog/admin/post" method="post" enctype="multipart/form-data">
+        <form id="post" action="/blog/admin/post" method="post" enctype="multipart/form-data">
             <% if (err !== false) { %>
                 <p class="error"><%= err %></p>
             <% } %>
             <label>
                 Title?
-                <input type="text" name="title" />
+                <input id="title" type="text" name="title" />
             </label>
-            <label>
-                Route?
-                <input type="text" name="route" />
-            </label>
+            <div>
+                <label>
+                    Route?
+                    <input id="route" type="text" name="route" />
+                </label>
+                <label>
+                    Topic
+                    <input id="topic" type="text" name="topic" />
+                </label>
+            </div>
             <label>
                 Photo?
-                <input type="file" name="image" accept="image/x-ping, image/jpg, image/jpeg" />
+                <input id="image" type="file" name="image" accept="image/x-ping, image/jpg, image/jpeg" />
             </label>
             <textarea name="content" id="editor" rows="10"></textarea>
             <label>
                 Blerb(short description of the article)
-                <textarea name="blerb"></textarea>
+                <textarea id="blerb" name="blerb"></textarea>
             </label>
-            <label>
-                Topic
-                <input type="text" name="topic" />
-            </label>
-            <input id="submit" type="submit" value="Post" />
+            <input id="location" type="text" name="location" onchange="handleChange(event, 'post')" hidden />
+            <input class="submit" type="submit" value="Post" />
         </form>
     <% } %>
 </div>

@@ -2,16 +2,13 @@
 <%- include("partials/frontend/header", {currentPage: currentPage, minimal: true}); %>
 
 <div class="container">
-    <div class="title">
-        <h2><%= data.title %></h2>
-        <p><%= data.date %></p>
-    </div>
+    <h2><%= data.title %></h2>
     <% if (data.image !==null) { %>
         <img src="<%= data.image %>" />
     <% } else { %>
         <hr />
     <% } %>
-    <div>
+    <div class="article">
         <%- data.content %>
     </div>
 </div>

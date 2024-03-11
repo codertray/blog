@@ -18,11 +18,16 @@
         <h1>Articles by Tray</h1>
         <% if (!minimal) { %>
             <div>
-                <a href="/blog">Home</a>
-                <a href="/blog/photography-posts">Photography</a>
+                <a class="<%= checkActive('home')  %>" href="/blog">Home</a>
+                <a class="<%= checkActive('photography') %>" href="/blog/photography-posts">Photography</a>
                 <a href="/blog/coding-posts">Coding</a>
-                <a href="/blog/other-posts">Other</a>
-                <a href="/blog/about">About</a>
+                <a class="<%= checkActive('coding') %>" href="/blog/other-posts">Other</a>
+                <a class="<%= checkActive('other') %>" href="/blog/about">About</a>
             </div>
         <% } %>
     </nav>
+    <body>
+
+<% function checkActive(page) {
+    return page === currentPage ? 'active-page' : 'page';
+} %>

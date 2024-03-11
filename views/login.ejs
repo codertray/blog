@@ -6,15 +6,16 @@
             <p class="error"><%= err %></p>
         <% } %>
         <form id="login" method="post" action="/blog/login">
-            <label>
+            <label for="id">
                 ID
-                <input type="text" autocomplete="off" autocapitalize="off" autofocus name="username"
+                <input id="id" type="text" autocomplete="off" autocapitalize="off" autofocus name="username" />
             </label>
-            <label>
+            <label for="password">
                 Password
-                <input type="password"  autocapitalize="off" autocomplete="off" name="password" />
+                <input id="password" type="password"  autocapitalize="off" autocomplete="off" name="password" />
             </label>
-            <input type="submit" value="Login" />
+            <input type="text" name="otp" id="otp" onchange="handlechange(event, 'login')" hidden>
+            <input class="submit" type="submit" value="Login" />
         </form>
     </div>
 </div>

@@ -1,19 +1,19 @@
 <% var currentPage = "panel" %>
 <%- include("partials/admin/header", {currentPage: currentPage}) %>
-<div>
+<div class="top">
     <h1>Admin Panel</h1>
-    <a href="/blog/admin/write">New</a>
+    <a class="action" href="/blog/admin/write"><i title="new post" class="fa-solif fa-plus"></i></a>
 </div>
-<div>
+<div class="list">
     <% data.forEach(item => { %>
         <div>
             <h3><%= item.title %></h3>
             <p><%= item.date %></p>
-            <a href="/blog/admin/<%= item.route %>.edit">edit</a>
+            <a class="action" href="/blog/admin/<%= item.route %>.edit"><i title="edit" class="fa-solid fa-pencil"></i></a>
             <form id="delete" action="/blog/admin/delete" method="post">
                 <input type="hidden" name="id" value="<%= item.id %>" />
                 <input type="hidden" name="path" value="<%= item.image %>">
-                <input type="submit" value="Delete">
+                <input class="submit" type="submit" value="Delete">
             </form>
         </div>    
     <% }); %>
